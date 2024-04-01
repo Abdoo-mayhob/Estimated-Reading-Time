@@ -41,6 +41,8 @@ defined('ABSPATH') or die;
 add_action('init', function(){
     EstReadTime::I();
 });
+
+
 /**
  * Main Class.
  */
@@ -60,7 +62,7 @@ class EstReadTime {
         add_action('add_meta_boxes', [$this, 'meta_boxes']);
         add_filter('manage_posts_columns', [$this,'admin_columns']);
         add_action('manage_posts_custom_column', [$this,'admin_columns_content']);
-
+        add_filter('wpseo_schema_article', [$this,'add_reading_duration_to_yoast_schema']);
     }
 
 
@@ -125,7 +127,7 @@ class EstReadTime {
             if( 1 > $etr)
                 $etr = 1;
 
-            elseif (1 == $etr || 1 < $etr ) {
+            if (1 == $etr || 10 < $etr ) {
                 $etr .= ' دقيقة';
             } else {
                 $etr .= ' دقائق ';
@@ -138,7 +140,7 @@ class EstReadTime {
             if( 1 > $etr)
                 $etr = 1;
 
-        $etr .= ' Mins';
+            $etr .= ' Mins';
         }
 
         return $etr;
@@ -180,6 +182,19 @@ class EstReadTime {
 
     
         return strtolower($language);
+    }
+
+    public function add_reading_duration_to_yoast_schema($data) {
+    
+        // Get the reading duration
+        $reading_duration = self::get_eta();
+    
+        // Add the reading duration to the schema
+        if (!empty($reading_duration)) {
+            $data['readingTime'] = $reading_duration;
+        }
+    
+        return $data;
     }
     
 

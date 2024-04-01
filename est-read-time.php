@@ -28,8 +28,6 @@
  * 
  * TODO:
  * - Shortcode
- * - WPML Support
- * - Yoast SEO Support
  * - Math Rank Support
  * 
  */
@@ -80,6 +78,8 @@ class EstReadTime {
         }
     }
 
+    // --------------------------------------------------------------------------------------
+    // Admin Menu
     public function admin_menu() {
         add_menu_page(
             _('Estimated Reading Time Settings', 'ert'), 
@@ -87,15 +87,15 @@ class EstReadTime {
             'manage_options', 'sso', [$this, 'view_admin'], 'dashicons-clock');
     }
 
-
-    public function meta_boxes() {
-        add_meta_box('read_eta-meta-box', __('Estimated Reading Time', 'ert'), [$this,'meta_box_cb'], 'post', 'side', 'high');
-    }
-
     public function view_admin($post) {
         ?><h1><?php _e('Estimated Reading Time Settings', 'ert')?></h1><?php
     }
-    
+
+    // --------------------------------------------------------------------------------------
+    // MetaBox UI
+    public function meta_boxes() {
+        add_meta_box('read_eta-meta-box', __('Estimated Reading Time', 'ert'), [$this,'meta_box_cb'], 'post', 'side', 'high');
+    }
 
     public function meta_box_cb($post) {
 
@@ -112,6 +112,15 @@ class EstReadTime {
     
     }
 
+    // --------------------------------------------------------------------------------------
+    // Main Logic & Calculator Functions
+
+    /**
+     * Calculates estimated reading time (ERT) for a post.
+     *
+     * @param WP_Post|null $post The post object. Defaults to current post.
+     * @return string ERT in minutes, in the language of the post.
+     */
     public function get_eta($post = null) {
 
         $post = $post ?? get_post();
@@ -146,6 +155,12 @@ class EstReadTime {
         return $etr;
     }
 
+    /**
+     * Gets word count of a post in any langague.
+     *
+     * @param WP_Post $post The post object.
+     * @return int Word count.
+     */
     public function get_word_count($post) {
         $custom_value = get_post_meta($post->ID, self::READ_ETA_META_FIELD_NAME, true);
 
@@ -162,6 +177,13 @@ class EstReadTime {
         return $word_count;
     }
 
+    /**
+     * Gets post language based on active translation plugin, or site language by default.
+     * Suported Plugins: WPML, PolyLang
+     *
+     * @param WP_Post $post The post object.
+     * @return string Post language (ex: 'ar' 'en').
+     */
     public function get_post_language($post) {
     
         $language = '';
@@ -184,6 +206,17 @@ class EstReadTime {
         return strtolower($language);
     }
 
+    // --------------------------------------------------------------------------------------
+    // Yoast SEO Support
+
+    /**
+     * Modifies Yoast SEO schema to include reading duration.
+     *
+     * @filter wpseo_schema_article
+     *
+     * @param array $data Existing schema data.
+     * @return array Modified schema data.
+     */
     public function add_reading_duration_to_yoast_schema($data) {
     
         // Get the reading duration

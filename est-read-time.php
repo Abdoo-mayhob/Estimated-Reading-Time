@@ -27,12 +27,8 @@
  * ===================================================================
  * 
  * TODO:
- * - Admin Dashboard
- * - Calculator
- * - Metafield
  * - Shortcode
  * - WPML Support
- * - Polylang Support
  * - Yoast SEO Support
  * - Math Rank Support
  * 
@@ -65,12 +61,15 @@ class EstReadTime {
     }
 
     public function admin_menu() {
-        add_menu_page('SSO', 'SSO', 'manage_options', 'sso', [$this, 'view_admin'], 'dashicons-rest-api');
+        add_menu_page(
+            _('Estimated Reading Time Settings', 'ert'), 
+            _('Estimated Reading Time Settings', 'ert'),
+            'manage_options', 'sso', [$this, 'view_admin'], 'dashicons-clock');
     }
 
 
     public function meta_boxes() {
-        add_meta_box('read_eta-meta-box', __('الوقت التقديري للقراءة', 'ert'), [$this,'meta_box_cb'], 'post', 'side', 'high');
+        add_meta_box('read_eta-meta-box', __('Estimated Reading Time', 'ert'), [$this,'meta_box_cb'], 'post', 'side', 'high');
     }
 
     public function view_admin($post) {
@@ -96,17 +95,29 @@ class EstReadTime {
     public function get_eta($post) {
         $word_count = self::get_word_count($post);
 
-        if(true){ // TODO: if(post==ar)
+        $lang = self::get_post_language($post);
+        
+        if('ar' == $lang ){
 
-            $etr = round($word_count / 250);
+            $etr = ceil($word_count / 250);
 
-            if ($etr == 0) {
-                $etr = '1 دقيقة';
-            } elseif ($etr == 1 || $etr > 10) {
-                $etr = $etr . ' دقيقة';
+            if( 1 > $etr)
+                $etr = 1;
+
+            elseif (1 == $etr || 1 < $etr ) {
+                $etr .= ' دقيقة';
             } else {
-                $etr = $etr . ' دقائق ';
+                $etr .= ' دقائق ';
             }
+        }
+        elseif($lang == 'en') {
+
+            $etr = ceil($word_count / 300);
+
+            if( 1 > $etr)
+                $etr = 1;
+
+        $etr .= ' Mins';
         }
 
         return $etr;
@@ -121,12 +132,32 @@ class EstReadTime {
         $post_content = get_post_field( 'post_content', $post->ID );
         $post_content = strip_shortcodes( $post_content );
         $post_content = wp_strip_all_tags( $post_content );
-        $word_count = count( preg_split( '/\s+/', $post_content ) );
+        $word_count =  count(preg_split( '/\s+/', $post_content ));
 
         $word_count = apply_filters( 'ert_get_word_count', $word_count );
 
         return $word_count;
     }
 
+    public function get_post_language($post) {
+    
+        $language = '';
+    
+        // Check if WPML is active
+        if (defined('ICL_SITEPRESS_VERSION')) {
+            $language = apply_filters('wpml_post_language_details', NULL, $post->ID)['language_code'];
+        }
+        // Check if Polylang is active
+        elseif (function_exists('pll_current_language')) {
+            $language = pll_get_post_language($post->ID);
+        }
+        // If no translation plugin is active, get the default site language
+        else {
+            $language = substr(get_locale(), 0, 2);
+        }
+    
+        return strtolower($language);
+    }
+    
 
 }

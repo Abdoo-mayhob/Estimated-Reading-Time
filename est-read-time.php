@@ -58,6 +58,24 @@ class EstReadTime {
     public function __construct() {
         add_action('admin_menu', [$this, 'admin_menu']);
         add_action('add_meta_boxes', [$this, 'meta_boxes']);
+        add_filter('manage_posts_columns', [$this,'admin_columns']);
+        add_action('manage_posts_custom_column', [$this,'admin_columns_content']);
+
+    }
+
+
+    // --------------------------------------------------------------------------------------
+    // Admin Columns
+    public function admin_columns($columns)
+    {
+        $columns['read_eta'] = _('Estimated Reading Time', 'ert');
+        return $columns;
+    }
+
+    public function admin_columns_content($column_name){
+        if( 'read_eta' == $column_name){
+            echo self::get_eta();
+        }
     }
 
     public function admin_menu() {
@@ -92,7 +110,10 @@ class EstReadTime {
     
     }
 
-    public function get_eta($post) {
+    public function get_eta($post = null) {
+
+        $post = $post ?? get_post();
+
         $word_count = self::get_word_count($post);
 
         $lang = self::get_post_language($post);
@@ -151,10 +172,12 @@ class EstReadTime {
         elseif (function_exists('pll_current_language')) {
             $language = pll_get_post_language($post->ID);
         }
-        // If no translation plugin is active, get the default site language
-        else {
+
+        // If no translation plugin is active, or an error happened, get the default site language.
+        if(empty($language)){
             $language = substr(get_locale(), 0, 2);
         }
+
     
         return strtolower($language);
     }

@@ -49,6 +49,20 @@ class EstReadTime {
     public const READ_ETA_META_FIELD_NAME = 'read_eta';
     public const ERT_SETTINGS = 'read_eta';
 
+    // Plugin Settings and Default Values (Used when options not set yet)
+    public $settings = [];
+    public const SETTINGS_DEFAULT = [
+        'ar_prefix' => 'الوقت المقدر للقراءة: ',
+        'ar_suffix_s' => 'دقيقة',
+        'ar_suffix_p' => 'دقائق',
+        'en_prefix' => 'Estimated Time of Reading: ',
+        'en_suffix' => 'Min',
+        'en_wpm' => 300,
+        'ar_wpm' => 250,
+        'edit_yoast_schema' => true,
+        'exclude_images' => true,
+    ];
+
     // Refers to a single instance of this class
 	private static $instance = null;
 
@@ -68,6 +82,9 @@ class EstReadTime {
         add_filter('manage_posts_columns', [$this,'admin_columns']);
         add_action('manage_posts_custom_column', [$this,'admin_columns_content']);
         add_filter('wpseo_schema_article', [$this,'add_reading_duration_to_yoast_schema']);
+
+        // Load Plugin Settings 
+        $this->settings = get_option(self::ERT_SETTINGS);
     }
 
 
@@ -135,28 +152,30 @@ class EstReadTime {
         $word_count = self::get_word_count($post);
 
         $lang = self::get_post_language($post);
+
+        $s = $this->settings;
         
         if('ar' == $lang ){
 
-            $etr = ceil($word_count / 250);
+            $etr = ceil($word_count / $s['ar_wpm'] );
 
             if( 1 > $etr)
                 $etr = 1;
 
             if (1 == $etr || 10 < $etr ) {
-                $etr .= ' دقيقة';
+                $etr .=  ' ' . $s['ar_suffix_s'];
             } else {
-                $etr .= ' دقائق ';
+                $etr .= ' ' . $s['ar_suffix_p'];
             }
         }
         elseif($lang == 'en') {
 
-            $etr = ceil($word_count / 300);
+            $etr = ceil($word_count / $s['en_wpm']);
 
             if( 1 > $etr)
                 $etr = 1;
 
-            $etr .= ' Mins';
+            $etr .= ' ' . $s['en_suffix'];
         }
 
         return $etr;

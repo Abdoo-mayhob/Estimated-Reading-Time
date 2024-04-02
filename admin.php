@@ -1,17 +1,7 @@
 <?php
 
 // The Default Value for each of the options
-$settings_defaults = [
-    'ar_prefix' => 'الوقت المقدر للقراءة: ',
-    'ar_suffix_s' => 'دقيقة',
-    'ar_suffix_p' => 'دقائق',
-    'en_prefix' => 'Estimated Time of Reading: ',
-    'en_suffix' => 'Min',
-    'en_wpm' => 300,
-    'ar_wpm' => 250,
-    'edit_yoast_schema' => true,
-    'exclude_images' => true,
-];
+$settings_defaults = self::SETTINGS_DEFAULT;
 
 // Save Settings
 if ($_POST['submit'] ?? false) {
@@ -31,9 +21,18 @@ if ($_POST['submit'] ?? false) {
     add_settings_error('ERT_SETTINGS', 'VALID_ERT_SETTINGS', 'Updated successfully.', 'updated');
     // add_settings_error('purchase_key', 'invalid_purchase_key', 'The Purchase Key Failed ! inspect the dd or the SSO API logs for more info');
 }
+// Reset Settings
+elseif($_POST['reset_all'] ?? false) {
+    update_option(self::ERT_SETTINGS, $settings_defaults);
+    add_settings_error('ERT_SETTINGS', 'VALID_ERT_SETTINGS', 'Updated successfully.', 'warning');
+}
 
+$settings = get_option(self::ERT_SETTINGS, $settings_defaults);
 
-$settings = get_option(self::ERT_SETTINGS);
+// For Debug
+echo '<pre style="direction: ltr;display:none;">Settings:';
+var_dump($settings);
+echo '</pre>';
 
 // Code Shorteners
 $s = $settings;
@@ -75,7 +74,7 @@ settings_errors('ERT_SETTINGS');
             <h2 class="collapsed">Advanced Section</h2>
             <a href="javascript:void(0)" class="toggle-adv-settings">Show</a>
             <a href="javascript:void(0)" class="toggle-adv-settings" style="display: none;">Hide</a>
-            
+
             <table class="form-table" id="adv-settings" style="display: none;">
                 <tr valign="top">
                     <th scope="row"><?php _e('Words Per Minutes for English content', 'ert'); ?></th>
@@ -105,6 +104,14 @@ settings_errors('ERT_SETTINGS');
                         </label>
                     </td>
                 </tr>
+                <tr valign="top">
+                    <th scope="row"><?php _e('Exclude Images from Reading Estimation ?', 'ert'); ?></th>
+                    <td>
+                        <form method="post" action="">
+                            <input type="submit" class="button button-link-delete alert-confirm" value="Reset All Settings" name="reset_all">
+                        </form>
+                    </td>
+                </tr>
             </table>
             <?php submit_button(); ?>
         </form>
@@ -115,6 +122,13 @@ settings_errors('ERT_SETTINGS');
     jQuery('.toggle-adv-settings').click(function(e) {
         jQuery('#adv-settings').toggle();
         jQuery('.toggle-adv-settings').toggle();
+    });
+    document.querySelectorAll('.alert-confirm').forEach(function(element) {
+        element.addEventListener('click', function(e) {
+            if (!confirm("<?php _e('Are You Sure?', 'ert');?>")) {
+                e.preventDefault();
+            }
+        });
     });
 </script>
 

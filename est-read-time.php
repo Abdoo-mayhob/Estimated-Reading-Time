@@ -47,9 +47,16 @@ add_action('init', function(){
 class EstReadTime {
 
     public const READ_ETA_META_FIELD_NAME = 'read_eta';
+    public const ERT_SETTINGS = 'read_eta';
 
-    private static $instance;
+    // Refers to a single instance of this class
+	private static $instance = null;
 
+    /**
+	 * Creates or returns a single instance of this class
+	 *
+	 * @return EstReadTime a single instance of this class.
+	 */
     public static function I() {
         self::$instance = self::$instance ?? new EstReadTime();
         return self::$instance;
@@ -81,14 +88,14 @@ class EstReadTime {
     // --------------------------------------------------------------------------------------
     // Admin Menu
     public function admin_menu() {
-        add_menu_page(
+        add_options_page(
             _('Estimated Reading Time Settings', 'ert'), 
-            _('Estimated Reading Time Settings', 'ert'),
-            'manage_options', 'sso', [$this, 'view_admin'], 'dashicons-clock');
+            _('Est Read Time', 'ert'),
+            'manage_options', 'ert', [$this, 'view_admin']);
     }
 
     public function view_admin($post) {
-        ?><h1><?php _e('Estimated Reading Time Settings', 'ert')?></h1><?php
+        require_once __DIR__ . '/admin.php';
     }
 
     // --------------------------------------------------------------------------------------

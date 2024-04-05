@@ -27,9 +27,8 @@
  * ===================================================================
  * 
  * TODO:
- * - Shortcode
- * - Math Rank Support
- * 
+ * - Shortcode Styling
+ * - Add Customization filters and hooks
  */
 
 // If this file is called directly, abort.
@@ -82,6 +81,7 @@ class EstReadTime {
         add_filter('manage_posts_columns', [$this,'admin_columns']);
         add_action('manage_posts_custom_column', [$this,'admin_columns_content']);
         add_filter('wpseo_schema_article', [$this,'add_reading_duration_to_yoast_schema']);
+        add_shortcode('est-read-time', [$this,'shortcode']);
 
         // Load Plugin Settings 
         $this->settings = get_option(self::ERT_SETTINGS);
@@ -98,7 +98,7 @@ class EstReadTime {
 
     public function admin_columns_content($column_name){
         if( 'read_eta' == $column_name){
-            echo self::get_eta();
+            echo self::get_etr();
         }
     }
 
@@ -126,7 +126,7 @@ class EstReadTime {
         $value = get_post_meta($post->ID, self::READ_ETA_META_FIELD_NAME, true);
 
         if(empty($value))
-            $value = self::get_eta($post);
+            $value = self::get_etr($post);
 
 
         wp_nonce_field('est_meta_box_nonce', 'est_meta_box_nonce');
@@ -145,7 +145,7 @@ class EstReadTime {
      * @param WP_Post|null $post The post object. Defaults to current post.
      * @return string ERT in minutes, in the language of the post.
      */
-    public function get_eta($post = null) {
+    public function get_etr($post = null) {
 
         $post = $post ?? get_post();
 
@@ -155,9 +155,15 @@ class EstReadTime {
 
         $s = $this->settings;
         
+        $wpm = $s["{$lang}_wpm"];
+
+        $etr = $word_count / $wpm;
+        $etr += $this->get_images_etr($post, $wpm);
+        $etr = ceil($etr);
+
+
         if('ar' == $lang ){
 
-            $etr = ceil($word_count / $s['ar_wpm'] );
 
             if( 1 > $etr)
                 $etr = 1;
@@ -167,19 +173,51 @@ class EstReadTime {
             } else {
                 $etr .= ' ' . $s['ar_suffix_p'];
             }
+            $etr = $s['ar_prefix'] . ' ' . $etr;
         }
-        elseif($lang == 'en') {
-
-            $etr = ceil($word_count / $s['en_wpm']);
+        elseif('en' == $lang) {
 
             if( 1 > $etr)
                 $etr = 1;
 
             $etr .= ' ' . $s['en_suffix'];
+            $etr = $s['en_prefix'] . ' ' . $etr ;
         }
 
         return $etr;
     }
+
+    /**
+	 * Get the accoutned additional reading time for images
+	 *
+	 * Calculate additional reading time added by images in posts. 
+     * Images Calculations Math: https://blog.medium.com/read-time-and-you-bc2048ab620c
+	 *
+	 * @param WP_Post $post The post object.
+	 * @param int $wpm words per minute.
+	 * @return int  Additional seconds to added to the reading time.
+	 */
+	public function get_images_etr( $post, $wpm ) {
+
+        $feature_disabled = $this->settings['exclude_images'] ?? self::SETTINGS_DEFAULT['exclude_images'];
+        if($feature_disabled)
+            return 0;
+
+		$additional_time = 0;
+
+        $total_n_of_images = substr_count( get_post_field( 'post_content', $post->ID ) , '<img ' );
+
+		// For the first image add 12 seconds, second image add 11, ..., for image 10+ add 3 seconds.
+		for ( $i = 1; $i <= $total_n_of_images; $i++ ) {
+			if ( $i >= 10 ) {
+				$additional_time += 3;
+			} else {
+				$additional_time += ( 12 - ( $i - 1 ) );
+			}
+		}
+
+		return $additional_time/60;
+	}
 
     /**
      * Gets word count of a post in any langague.
@@ -234,7 +272,7 @@ class EstReadTime {
 
     // --------------------------------------------------------------------------------------
     // Yoast SEO Support
-
+    
     /**
      * Modifies Yoast SEO schema to include reading duration.
      *
@@ -245,8 +283,12 @@ class EstReadTime {
      */
     public function add_reading_duration_to_yoast_schema($data) {
     
+        $enable_feature = $this->settings['edit_yoast_schema'] ?? self::SETTINGS_DEFAULT['edit_yoast_schema'];
+        if(!$enable_feature)
+        return $data;
+    
         // Get the reading duration
-        $reading_duration = self::get_eta();
+        $reading_duration = self::get_etr();
     
         // Add the reading duration to the schema
         if (!empty($reading_duration)) {
@@ -256,5 +298,17 @@ class EstReadTime {
         return $data;
     }
     
+    // --------------------------------------------------------------------------------------
+    // ShortCode
+    public function shortcode(){
+        ob_start();
+        ?>
+        <div class="ert" style="display: flex;align-items: center;justify-content: flex-start;gap: 6px;">
+            <img width="16" height="16" style="height: 16px; width: 16px;" src="<?php echo plugin_dir_url(__FILE__)?>assets/clock.svg" alt="CLock Icon">
+            <?php echo $this->get_etr()?>
+        </div>
+        <?php 
+        return ob_get_clean();
+    }
 
 }

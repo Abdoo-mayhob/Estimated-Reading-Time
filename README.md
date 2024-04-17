@@ -1,4 +1,4 @@
-# Estimated Reading Time
+# Arabic & English Estimated Reading Time
 
 **Contributors:** abdoo-mayhob  
 **Tags:** read,readtime,estimat,post,yoast,seo,polylang

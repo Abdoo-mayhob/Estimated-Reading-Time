@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: Estimated Reading Time\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2024-04-17 14:25+0000\n"
-"PO-Revision-Date: 2024-04-17 14:40+0000\n"
+"PO-Revision-Date: 2024-04-17 15:08+0000\n"
 "Last-Translator: \n"
 "Language-Team: العربية\n"
 "Language: ar\n"
@@ -23,6 +23,11 @@ msgstr "عبد اللطيف الميهوب"
 #: admin.php:83
 msgid "Advanced Section"
 msgstr "الإعدادات المتقدمة"
+
+#. Name of the plugin
+#: est-read-time.php:100 est-read-time.php:126
+msgid "Arabic & English Estimated Reading Time"
+msgstr "حاسبة وقت القراءة التقديري للمحتوى العربي و الإنكليزي"
 
 #: admin.php:61
 msgid "Arabic Prefix"
@@ -60,11 +65,6 @@ msgstr "النص اللاحق للمنشورات الانكليزية"
 
 #: est-read-time.php:115
 msgid "Est Read Time"
-msgstr "وقت القراءة التقديري"
-
-#. Name of the plugin
-#: est-read-time.php:100 est-read-time.php:126
-msgid "Estimated Reading Time"
 msgstr "وقت القراءة التقديري"
 
 #: admin.php:53 est-read-time.php:114

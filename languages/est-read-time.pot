@@ -64,7 +64,7 @@ msgstr ""
 
 #. Name of the plugin
 #: est-read-time.php:100 est-read-time.php:126
-msgid "Estimated Reading Time"
+msgid "Arabic & English Estimated Reading Time"
 msgstr ""
 
 #: admin.php:53 est-read-time.php:114

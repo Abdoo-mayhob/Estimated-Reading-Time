@@ -33,6 +33,11 @@
 // If this file is called directly, abort.
 defined('ABSPATH') or die;
 
+// Load Translation Files
+add_action('init', function() {
+    load_plugin_textdomain('est-read-time', false, dirname(plugin_basename(__FILE__)) . '/languages');
+});
+
 
 add_action('init', function(){
     EstReadTime::I();

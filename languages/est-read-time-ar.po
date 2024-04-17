@@ -1,0 +1,112 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Estimated Reading Time\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-04-17 14:25+0000\n"
+"PO-Revision-Date: 2024-04-17 14:40+0000\n"
+"Last-Translator: \n"
+"Language-Team: العربية\n"
+"Language: ar\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100 >= 3 "
+"&& n%100<=10 ? 3 : n%100 >= 11 && n%100<=99 ? 4 : 5;\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Loco https://localise.biz/\n"
+"X-Loco-Version: 2.6.7; wp-6.4.4\n"
+"X-Domain: est-read-time"
+
+#. Author of the plugin
+msgid "Abdoo"
+msgstr "عبد اللطيف الميهوب"
+
+#: admin.php:83
+msgid "Advanced Section"
+msgstr "الإعدادات المتقدمة"
+
+#: admin.php:61
+msgid "Arabic Prefix"
+msgstr "النص السابق للمنشورات العربية"
+
+#: admin.php:69
+msgid "Arabic Suffix (Plural)"
+msgstr "النص اللاحق للمنشورات بالعربية"
+
+#: admin.php:65
+msgid "Arabic Suffix (Single)"
+msgstr "النص اللاحق للمنشورات بالعربية (للأرقام المفردة)"
+
+#: admin.php:152
+msgid "Are You Sure?"
+msgstr "هل أنت متأكد ؟"
+
+#: admin.php:57
+msgid "Basic Section"
+msgstr "الإعدادات الأساسية"
+
+#. Description of the plugin
+msgid ""
+"Calculate and Show Estimated Reading Time in your posts in Both Arabic and "
+"English."
+msgstr "حساب و إظهار وقت القراءة المتوقع داخل منشوراتك العربية و الإنكليزية"
+
+#: admin.php:73
+msgid "English Prefix"
+msgstr "النص السابق للمنشورات الانكليزية"
+
+#: admin.php:77
+msgid "English Suffix"
+msgstr "النص اللاحق للمنشورات الانكليزية"
+
+#: est-read-time.php:115
+msgid "Est Read Time"
+msgstr "وقت القراءة التقديري"
+
+#. Name of the plugin
+#: est-read-time.php:100 est-read-time.php:126
+msgid "Estimated Reading Time"
+msgstr "وقت القراءة التقديري"
+
+#: admin.php:53 est-read-time.php:114
+msgid "Estimated Reading Time Settings"
+msgstr "إعدادات وقت القراءة التقديري"
+
+#: admin.php:107
+msgid "Exclude Images from Reading Estimation ?"
+msgstr "استثناء تقدير وقت قراءة الصور من المنشور ؟"
+
+#. Author URI of the plugin
+msgid "https://abdoo.me"
+msgstr "https://abdoo.me"
+
+#. URI of the plugin
+msgid "https://github.com/Abdoo-mayhob/Estimated-Reading-Time"
+msgstr "https://github.com/Abdoo-mayhob/Estimated-Reading-Time"
+
+#: admin.php:97
+msgid "Insert \"readingTime\" into Yoast SEO Schema ?"
+msgstr "إضافة وقت القراءة التقديري الى سكيما البوست في بلغن يوست ؟"
+
+#: admin.php:120
+msgid "Reset All Settings"
+msgstr "إعادة ضبط الإعدادات "
+
+#: admin.php:117
+msgid "Reset All Settings to Default"
+msgstr "إعادة ضبط الإعدادات "
+
+#: admin.php:131
+msgid "Show Estimated Reading Time Widget"
+msgstr "ودجت الوقت التقديري"
+
+#: admin.php:137
+msgid "Show Estimated Reading Time without any other html"
+msgstr "الوقت التقديري للمنشور بدون اي html اخر"
+
+#: admin.php:93
+msgid "Words Per Minutes for Arabic content"
+msgstr "معدل سرعة القراءة باللغة العربية (كلمة\\دقيقة)"
+
+#: admin.php:89
+msgid "Words Per Minutes for English content"
+msgstr "معدل سرعة القراءة باللغة الإنكليزية (كلمة\\دقيقة)"

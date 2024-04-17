@@ -80,7 +80,7 @@ settings_errors('ERT_SETTINGS');
                 </table>
 
                 <hr />
-                <h2 class="collapsed">Advanced Section</h2>
+                <h2 class="collapsed"><?php esc_html_e("Advanced Section",'est-read-time')?></h2>
                 <a href="javascript:void(0)" class="toggle-adv-settings">Show</a>
                 <a href="javascript:void(0)" class="toggle-adv-settings" style="display: none;">Hide</a>
 
@@ -117,7 +117,7 @@ settings_errors('ERT_SETTINGS');
                         <th scope="row"><?php esc_html_e('Reset All Settings to Default', 'est-read-time'); ?></th>
                         <td>
                             <form method="post" action="">
-                                <input type="submit" class="button button-link-delete alert-confirm" value="Reset All Settings" name="reset_all">
+                                <input type="submit" class="button button-link-delete alert-confirm" value="<?php echo esc_attr(__('Reset All Settings','est-read-time'))?>" name="reset_all">
                             </form>
                         </td>
                     </tr>

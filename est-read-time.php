@@ -8,7 +8,7 @@
  * Author: Abdoo
  * Author URI: https://abdoo.me
  * License: GPL3
- * Text Domain: ert
+ * Text Domain: est-read-time
  * Domain Path: /languages
  *
  * ===================================================================
@@ -27,7 +27,6 @@
  * ===================================================================
  * 
  * TODO:
- * - Shortcode Styling
  * - Add Customization filters and hooks
  */
 
@@ -81,6 +80,7 @@ class EstReadTime {
         add_filter('manage_posts_columns', [$this,'admin_columns']);
         add_action('manage_posts_custom_column', [$this,'admin_columns_content']);
         add_filter('wpseo_schema_article', [$this,'add_reading_duration_to_yoast_schema']);
+        add_shortcode('est-read-time-widget', [$this,'shortcode_widget']);
         add_shortcode('est-read-time', [$this,'shortcode']);
 
         // Load Plugin Settings 
@@ -92,13 +92,13 @@ class EstReadTime {
     // Admin Columns
     public function admin_columns($columns)
     {
-        $columns['read_eta'] = _('Estimated Reading Time', 'ert');
+        $columns['read_eta'] = __('Estimated Reading Time', 'est-read-time');
         return $columns;
     }
 
     public function admin_columns_content($column_name){
         if( 'read_eta' == $column_name){
-            echo self::get_etr();
+            echo esc_html(self::get_etr());
         }
     }
 
@@ -106,9 +106,9 @@ class EstReadTime {
     // Admin Menu
     public function admin_menu() {
         add_options_page(
-            _('Estimated Reading Time Settings', 'ert'), 
-            _('Est Read Time', 'ert'),
-            'manage_options', 'ert', [$this, 'view_admin']);
+            __('Estimated Reading Time Settings', 'est-read-time'), 
+            __('Est Read Time', 'est-read-time'),
+            'manage_options', 'est-read-time', [$this, 'view_admin']);
     }
 
     public function view_admin($post) {
@@ -118,7 +118,7 @@ class EstReadTime {
     // --------------------------------------------------------------------------------------
     // MetaBox UI
     public function meta_boxes() {
-        add_meta_box('read_eta-meta-box', __('Estimated Reading Time', 'ert'), [$this,'meta_box_cb'], 'post', 'side', 'high');
+        add_meta_box('read_eta-meta-box', __('Estimated Reading Time', 'est-read-time'), [$this,'meta_box_cb'], 'post', 'side', 'high');
     }
 
     public function meta_box_cb($post) {
@@ -131,7 +131,7 @@ class EstReadTime {
 
         wp_nonce_field('est_meta_box_nonce', 'est_meta_box_nonce');
         ?>
-        <input type="text" name="<?= self::READ_ETA_META_FIELD_NAME?>" value="<?= $value; ?>"/>
+        <input type="text" name="<?php echo esc_attr(self::READ_ETA_META_FIELD_NAME)?>" value="<?php echo esc_attr($value)?>"/>
         <?php
     
     }
@@ -300,15 +300,19 @@ class EstReadTime {
     
     // --------------------------------------------------------------------------------------
     // ShortCode
-    public function shortcode(){
+    public function shortcode_widget(){
         ob_start();
         ?>
         <div class="ert" style="display: flex;align-items: center;justify-content: flex-start;gap: 6px;">
-            <img width="16" height="16" style="height: 16px; width: 16px;" src="<?php echo plugin_dir_url(__FILE__)?>assets/clock.svg" alt="CLock Icon">
-            <?php echo $this->get_etr()?>
+            <img width="16" height="16" style="height: 16px; width: 16px;" src="<?php echo esc_url(plugin_dir_url(__FILE__) . "assets/clock.svg")?> alt="CLock Icon">
+            <?php echo wp_kses_post($this->get_etr()) ?>
         </div>
         <?php 
         return ob_get_clean();
+    }
+
+    public function shortcode(){
+        return wp_kses_post($this->get_etr());
     }
 
 }

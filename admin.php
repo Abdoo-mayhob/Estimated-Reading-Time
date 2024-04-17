@@ -7,6 +7,11 @@ $settings_defaults = self::SETTINGS_DEFAULT;
 
 // Save Settings
 if ($_POST['submit'] ?? false) {
+
+    if (!isset($_POST['ert_nonce']) || !wp_verify_nonce($_POST['ert_nonce'], 'ert_nonce')) {
+        echo "Nonce failed, try again.";
+    };
+
     $settings['ar_prefix'] = isset($_POST['ar_prefix']) ? sanitize_text_field(trim($_POST['ar_prefix'])) : '';
     $settings['ar_suffix_s'] = isset($_POST['ar_suffix_s']) ? sanitize_text_field(trim($_POST['ar_suffix_s'])) : '';
     $settings['ar_suffix_p'] = isset($_POST['ar_suffix_p']) ? sanitize_text_field(trim($_POST['ar_suffix_p'])) : '';
@@ -24,7 +29,7 @@ if ($_POST['submit'] ?? false) {
     // add_settings_error('purchase_key', 'invalid_purchase_key', 'The Purchase Key Failed ! inspect the dd or the SSO API logs for more info');
 }
 // Reset Settings
-elseif($_POST['reset_all'] ?? false) {
+elseif ($_POST['reset_all'] ?? false) {
     update_option(self::ERT_SETTINGS, $settings_defaults);
     add_settings_error('ERT_SETTINGS', 'VALID_ERT_SETTINGS', 'Updated successfully.', 'warning');
 }
@@ -45,78 +50,95 @@ settings_errors('ERT_SETTINGS');
 
 ?>
 <div class="wrap">
-    <h1><?php _e('Estimated Reading Time Settings', 'ert') ?></h1>
-    <div class="col" style="width: 440px;">
-        <form method="post">
-            <h2>Basic Section</h2>
-            <table class="form-table">
-                <tr valign="top">
-                    <th scope="row"><?php _e('Arabic Prefix', 'ert'); ?></th>
-                    <td><input type="text" name="ar_prefix" value="<?php echo esc_attr($s['ar_prefix'] ?? $sd['ar_prefix']); ?>" /></td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><?php _e('Arabic Suffix (Single)', 'ert'); ?></th>
-                    <td><input type="text" name="ar_suffix_s" value="<?php echo esc_attr($s['ar_suffix_s'] ?? $sd['ar_suffix_s']); ?>" /></td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><?php _e('Arabic Suffix (Plural)', 'ert'); ?></th>
-                    <td><input type="text" name="ar_suffix_p" value="<?php echo esc_attr($s['ar_suffix_p'] ?? $sd['ar_suffix_p']); ?>" /></td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><?php _e('English Prefix', 'ert'); ?></th>
-                    <td><input type="text" name="en_prefix" value="<?php echo esc_attr($s['en_prefix'] ?? $sd['en_prefix']); ?>" /></td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><?php _e('English Suffix', 'ert'); ?></th>
-                    <td><input type="text" name="en_suffix" value="<?php echo esc_attr($s['en_suffix'] ?? $sd['en_suffix']); ?>" /></td>
-                </tr>
-            </table>
+    <h1><?php esc_html_e('Estimated Reading Time Settings', 'est-read-time') ?></h1>
+    <div class="row" style="display: flex;justify-content: space-between;">
+        <div class="col" style="width: 440px;">
+            <form method="post">
+                <h2><?php esc_html_e('Basic Section', 'est-read-time') ?></h2>
+                <?php wp_nonce_field('ert_nonce', 'ert_nonce'); ?>
+                <table class="form-table">
+                    <tr valign="top">
+                        <th scope="row"><?php esc_html_e('Arabic Prefix', 'est-read-time'); ?></th>
+                        <td><input type="text" name="ar_prefix" value="<?php echo esc_attr($s['ar_prefix'] ?? $sd['ar_prefix']); ?>" /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php esc_html_e('Arabic Suffix (Single)', 'est-read-time'); ?></th>
+                        <td><input type="text" name="ar_suffix_s" value="<?php echo esc_attr($s['ar_suffix_s'] ?? $sd['ar_suffix_s']); ?>" /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php esc_html_e('Arabic Suffix (Plural)', 'est-read-time'); ?></th>
+                        <td><input type="text" name="ar_suffix_p" value="<?php echo esc_attr($s['ar_suffix_p'] ?? $sd['ar_suffix_p']); ?>" /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php esc_html_e('English Prefix', 'est-read-time'); ?></th>
+                        <td><input type="text" name="en_prefix" value="<?php echo esc_attr($s['en_prefix'] ?? $sd['en_prefix']); ?>" /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php esc_html_e('English Suffix', 'est-read-time'); ?></th>
+                        <td><input type="text" name="en_suffix" value="<?php echo esc_attr($s['en_suffix'] ?? $sd['en_suffix']); ?>" /></td>
+                    </tr>
+                </table>
 
-            <hr />
-            <h2 class="collapsed">Advanced Section</h2>
-            <a href="javascript:void(0)" class="toggle-adv-settings">Show</a>
-            <a href="javascript:void(0)" class="toggle-adv-settings" style="display: none;">Hide</a>
+                <hr />
+                <h2 class="collapsed">Advanced Section</h2>
+                <a href="javascript:void(0)" class="toggle-adv-settings">Show</a>
+                <a href="javascript:void(0)" class="toggle-adv-settings" style="display: none;">Hide</a>
 
-            <table class="form-table" id="adv-settings" style="display: none;">
-                <tr valign="top">
-                    <th scope="row"><?php _e('Words Per Minutes for English content', 'ert'); ?></th>
-                    <td><input type="number" name="en_wpm" value="<?php echo esc_attr($s['en_wpm'] ?? $sd['en_wpm']); ?>" /></td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><?php _e('Words Per Minutes for Arabic content', 'ert'); ?></th>
-                    <td><input type="number" name="ar_wpm" value="<?php echo esc_attr($s['ar_wpm'] ?? $sd['ar_wpm']); ?>" /></td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><?php _e('Insert "readingTime" into Yoast SEO Schema ?', 'ert'); ?></th>
-                    <td>
-                        <!-- Rounded switch -->
-                        <label class="switch">
-                            <input type="checkbox" name="edit_yoast_schema" <?php checked($s['edit_yoast_schema'] ?? $sd['edit_yoast_schema']) ?>>
-                            <span class="slider round"></span>
-                        </label>
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><?php _e('Exclude Images from Reading Estimation ?', 'ert'); ?></th>
-                    <td>
-                        <!-- Rounded switch -->
-                        <label class="switch">
-                            <input type="checkbox" name="exclude_images" <?php checked($s['exclude_images'] ?? $sd['exclude_images']) ?>>
-                            <span class="slider round"></span>
-                        </label>
-                    </td>
-                </tr>
-                <tr valign="top">
-                    <th scope="row"><?php _e('Exclude Images from Reading Estimation ?', 'ert'); ?></th>
-                    <td>
-                        <form method="post" action="">
-                            <input type="submit" class="button button-link-delete alert-confirm" value="Reset All Settings" name="reset_all">
-                        </form>
-                    </td>
-                </tr>
-            </table>
-            <?php submit_button(); ?>
-        </form>
+                <table class="form-table" id="adv-settings" style="display: none;">
+                    <tr valign="top">
+                        <th scope="row"><?php esc_html_e('Words Per Minutes for English content', 'est-read-time'); ?></th>
+                        <td><input type="number" name="en_wpm" value="<?php echo esc_attr($s['en_wpm'] ?? $sd['en_wpm']); ?>" /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php esc_html_e('Words Per Minutes for Arabic content', 'est-read-time'); ?></th>
+                        <td><input type="number" name="ar_wpm" value="<?php echo esc_attr($s['ar_wpm'] ?? $sd['ar_wpm']); ?>" /></td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php esc_html_e('Insert "readingTime" into Yoast SEO Schema ?', 'est-read-time'); ?></th>
+                        <td>
+                            <!-- Rounded switch -->
+                            <label class="switch">
+                                <input type="checkbox" name="edit_yoast_schema" <?php checked($s['edit_yoast_schema'] ?? $sd['edit_yoast_schema']) ?>>
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php esc_html_e('Exclude Images from Reading Estimation ?', 'est-read-time'); ?></th>
+                        <td>
+                            <!-- Rounded switch -->
+                            <label class="switch">
+                                <input type="checkbox" name="exclude_images" <?php checked($s['exclude_images'] ?? $sd['exclude_images']) ?>>
+                                <span class="slider round"></span>
+                            </label>
+                        </td>
+                    </tr>
+                    <tr valign="top">
+                        <th scope="row"><?php esc_html_e('Reset All Settings to Default', 'est-read-time'); ?></th>
+                        <td>
+                            <form method="post" action="">
+                                <input type="submit" class="button button-link-delete alert-confirm" value="Reset All Settings" name="reset_all">
+                            </form>
+                        </td>
+                    </tr>
+                </table>
+                <?php submit_button(); ?>
+            </form>
+        </div>
+        <div class="col" style="width: 45vw;">
+            <h2>ShortCode</h2>
+            <div>
+                <?php esc_html_e('Show Estimated Reading Time Widget', 'est-read-time') ?>
+                <br>
+                <strong>[est-read-time-widget]</strong>
+            </div>
+            <br><br>
+            <div>
+                <?php esc_html_e('Show Estimated Reading Time without any other html', 'est-read-time') ?>
+                <br>
+                <strong>[est-read-time]</strong>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -127,7 +149,7 @@ settings_errors('ERT_SETTINGS');
     });
     document.querySelectorAll('.alert-confirm').forEach(function(element) {
         element.addEventListener('click', function(e) {
-            if (!confirm("<?php _e('Are You Sure?', 'ert');?>")) {
+            if (!confirm("<?php esc_html_e('Are You Sure?', 'est-read-time'); ?>")) {
                 e.preventDefault();
             }
         });

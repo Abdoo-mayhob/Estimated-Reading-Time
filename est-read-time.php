@@ -7,7 +7,7 @@
  * Version: 1.0.0
  * Author: Abdoo
  * Author URI: https://abdoo.me
- * License: GPL3
+ * License: GPLv2 or later
  * Text Domain: est-read-time
  * Domain Path: /languages
  *

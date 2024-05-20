@@ -8,7 +8,7 @@
  * Author: Abdoo
  * Author URI: https://abdoo.me
  * License: GPLv2 or later
- * Text Domain: est-read-time
+ * Text Domain: arabic-english-estimated-reading-time
  * Domain Path: /languages
  *
  * ===================================================================
@@ -33,8 +33,8 @@
 // If this file is called directly, abort.
 defined('ABSPATH') or die;
 
-// Load Translation Files
-add_action('init', function() {
+// Load Translation Files (Translations only needed in admin area)
+add_action('admin_init', function() {
     load_plugin_textdomain('est-read-time', false, dirname(plugin_basename(__FILE__)) . '/languages');
 });
 
@@ -97,7 +97,7 @@ class EstReadTime {
     // Admin Columns
     public function admin_columns($columns)
     {
-        $columns['read_eta'] = __('Estimated Reading Time', 'est-read-time');
+        $columns['read_eta'] = __('Estimated Reading Time', 'arabic-english-estimated-reading-time');
         return $columns;
     }
 
@@ -111,8 +111,8 @@ class EstReadTime {
     // Admin Menu
     public function admin_menu() {
         add_options_page(
-            __('Estimated Reading Time Settings', 'est-read-time'), 
-            __('Est Read Time', 'est-read-time'),
+            __('Estimated Reading Time Settings', 'arabic-english-estimated-reading-time'), 
+            __('Est Read Time', 'arabic-english-estimated-reading-time'),
             'manage_options', 'est-read-time', [$this, 'view_admin']);
     }
 
@@ -123,7 +123,7 @@ class EstReadTime {
     // --------------------------------------------------------------------------------------
     // MetaBox UI
     public function meta_boxes() {
-        add_meta_box('read_eta-meta-box', __('Estimated Reading Time', 'est-read-time'), [$this,'meta_box_cb'], 'post', 'side', 'high');
+        add_meta_box('read_eta-meta-box', __('Estimated Reading Time', 'arabic-english-estimated-reading-time'), [$this,'meta_box_cb'], 'post', 'side', 'high');
     }
 
     public function meta_box_cb($post) {

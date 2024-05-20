@@ -5,8 +5,10 @@
 **Requires at least:** 5.0  
 **Tested up to:** 6.5.0  
 **Requires PHP:** 7.0  
-**Stable tag:** 1.0.0 
-**License:** GPLv2 or later  
+**Stable tag:** 1.0.0
+
+**License:** GPLv2 or later
+
 **License URI:** [https://www.gnu.org/licenses/gpl-2.0.html](https://www.gnu.org/licenses/gpl-2.0.html)    
 
 ## Description
@@ -16,7 +18,7 @@ With no perfomance Impact, and no external loaded styles or scripts
 
 ## Installation
 
-1. Upload the `est-read-time` folder to the `/wp-content/plugins/` directory.
+1. Upload the `arabic-english-estimated-reading-time` folder to the `/wp-content/plugins/` directory.
 2. Activate the plugin through the 'Plugins' menu in WordPress.
 3. Configure the plugin by navigating to Settings -> Estimated Reading Time in the WordPress dashboard.
 

@@ -4,7 +4,7 @@
  * Plugin Name: Arabic & English Estimated Reading Time
  * Plugin URI: https://github.com/Abdoo-mayhob/Estimated-Reading-Time
  * Description: Calculate and Show Estimated Reading Time in your posts in Both Arabic and English.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Abdoo
  * Author URI: https://abdoo.me
  * License: GPLv2 or later
@@ -35,13 +35,13 @@ defined('ABSPATH') or die;
 
 // Load Translation Files (Translations only needed in admin area)
 add_action('admin_init', function() {
-    load_plugin_textdomain('est-read-time', false, dirname(plugin_basename(__FILE__)) . '/languages');
-});
+    load_plugin_textdomain('arabic-english-estimated-reading-time', false, dirname(  plugin_basename( __FILE__ ) ) . '/languages/' );
+},0);
 
 
 add_action('init', function(){
     EstReadTime::I();
-});
+},10);
 
 
 /**
@@ -309,7 +309,7 @@ class EstReadTime {
         ob_start();
         ?>
         <div class="ert" style="display: flex;align-items: center;justify-content: flex-start;gap: 6px;">
-            <img width="16" height="16" style="height: 16px; width: 16px;" src="<?php echo esc_url(plugin_dir_url(__FILE__) . "assets/clock.svg")?> alt="CLock Icon">
+            <img width="16" height="16" style="height: 16px; width: 16px;" src="<?php echo esc_url(plugin_dir_url(__FILE__) . "assets/clock.svg")?>" alt="CLock Icon">
             <?php echo wp_kses_post($this->get_etr()) ?>
         </div>
         <?php 

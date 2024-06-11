@@ -1,17 +1,19 @@
 # Arabic & English Estimated Reading Time
 
-**Contributors:** abdoo-mayhob  
-**Tags:** read,readtime,estimat,post,yoast,seo,polylang
+**Contributors:** abdoomayhob  
+**Tags:** read,readtime,estimat,yoast,seo
 **Requires at least:** 5.0  
 **Tested up to:** 6.5.0  
 **Requires PHP:** 7.0  
-**Stable tag:** 1.0.0
+**Stable tag:** 1.0.1
 **License:** GPLv2 or later
 **License URI:** [https://www.gnu.org/licenses/gpl-2.0.html](https://www.gnu.org/licenses/gpl-2.0.html)    
 
+Calculate and Show Estimated Reading Time in your posts in Both Arabic and English.
+
 ## Description
 
-Wordpress Plugin to Calculate and Show Estimated Reading Time in your posts in Both Arabic and English.
+Calculate and Show Estimated Reading Time in your posts in Both Arabic and English.
 With no perfomance Impact, and no external loaded styles or scripts
 
 ## Installation
@@ -32,6 +34,3 @@ With no perfomance Impact, and no external loaded styles or scripts
 
 2. **Dose this plugin supports Yoast SEO ?**
    - Yes, This plugin will add the "readingTime" attribute to the Schema of the post, improving it appearance in google search, you results. You can Disable this feature via the plugin settings.
-
-# Credit
-- [Abdoo Mayhob](https://abdoo.me)

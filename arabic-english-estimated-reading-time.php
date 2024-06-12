@@ -4,7 +4,7 @@
  * Plugin Name: Arabic & English Estimated Reading Time
  * Plugin URI: https://github.com/Abdoo-mayhob/Estimated-Reading-Time
  * Description: Calculate and Show Estimated Reading Time in your posts in Both Arabic and English.
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Abdoo
  * Author URI: https://abdoo.me
  * License: GPLv2 or later
@@ -34,7 +34,7 @@
 defined('ABSPATH') or die;
 
 // Load Translation Files (Translations only needed in admin area)
-add_action('admin_init', function() {
+add_action('plugins_loaded', function() {
     load_plugin_textdomain('arabic-english-estimated-reading-time', false, dirname(  plugin_basename( __FILE__ ) ) . '/languages/' );
 },0);
 
@@ -89,7 +89,7 @@ class EstReadTime {
         add_shortcode('est-read-time', [$this,'shortcode']);
 
         // Load Plugin Settings 
-        $this->settings = get_option(self::ERT_SETTINGS);
+        $this->settings = get_option(self::ERT_SETTINGS, self::SETTINGS_DEFAULT);
     }
 
 
@@ -112,7 +112,7 @@ class EstReadTime {
     public function admin_menu() {
         add_options_page(
             __('Estimated Reading Time Settings', 'arabic-english-estimated-reading-time'), 
-            __('Est Read Time', 'arabic-english-estimated-reading-time'),
+            __('Reading Time', 'arabic-english-estimated-reading-time'),
             'manage_options', 'est-read-time', [$this, 'view_admin']);
     }
 

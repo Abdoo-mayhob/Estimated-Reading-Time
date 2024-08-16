@@ -5,7 +5,7 @@
  * Plugin Name: Arabic & English Estimated Reading Time
  * Plugin URI: https://github.com/Abdoo-mayhob/Estimated-Reading-Time
  * Description: Calculate and Show Estimated Reading Time in your posts in Both Arabic and English.
- * Version: 1.2.0
+ * Version: 1.2.1
  * Author: Abdoo
  * Author URI: https://abdoo.me
  * License: GPLv2 or later
